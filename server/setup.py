@@ -21,15 +21,15 @@ from printemps import __version__
 
 
 setup(
-    name='Printemps',
+    name='graph4py',
     version=__version__,
-    url='https://github.com/Printemps/Printemps',
+    url='https://github.com/python-graph-lovestory/Graph4Py',
     license='AGPL',
     author='Amirouche Boubekki',
     author_email='amirouche.boubekki@gmail.com',
     description='Python graph database lovestory',
     long_description=__doc__,
-    py_modules=['printemps'],
+    py_modules=['graph4py'],
     zip_safe=False,
     platforms='any',
     install_requires=['setproctitle', 'blueprints'],
@@ -40,7 +40,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'printemps = printemps:main',
+            'graph4py = graph4py:main',
         ]
     }
 
