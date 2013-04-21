@@ -17,7 +17,7 @@ def long_description():
 __doc__ = long_description()
 
 
-from printemps import __version__
+from graph4py import __version__
 
 
 setup(
