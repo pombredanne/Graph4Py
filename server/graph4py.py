@@ -15,11 +15,45 @@ from setproctitle import setproctitle
 __version__ = '0.1'
 
 
+class ObjectsGraph(Graph):
+
+    def create_vertex_object(self, mro):
+        vertex = self.create_vertex()
+        index = self.__get_or_create_index('objects', Graph.VERTEX)
+        for class_name in mro:
+            index.put('vertices', class_name, vertex)
+        return vertex
+
+    def __get_or_create_index(self, name, klass):
+        index = self.index.get('objects', klass)
+        if not index:
+            index = self.index.create('objects', klass)
+        return index
+
+    def create_edge_object(self, start, label, end, mro):
+        edge = self.create_edge(start, label, end)
+        index = self.__get_or_create_index('objects', Graph.EDGE)
+        for class_name in mro:
+            index.put('edges', class_name, edge)
+        return edge
+
+    def iter_objects(self, class_name):
+        index = self.__get_or_create_index('objects', Graph.VERTEX)
+        if not index:
+            index = self.__get_or_create_index('objects', Graph.EDGE)
+            if not index:
+                raise StopIteration
+            else:
+                return index.get('edges', class_name)
+        else:
+            return index.get('vertex', class_name)
+
+
 class Graph4Py(object):
 
     def __init__(self, backend, path, authkey):
         self.authkey = authkey
-        self.graph = Graph(backend, path)
+        self.graph = ObjectsGraph(backend, path)
         self.running = True
 
     def process(self, connection):
