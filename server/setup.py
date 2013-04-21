@@ -43,5 +43,4 @@ setup(
             'graph4py = graph4py:main',
         ]
     }
-
 )

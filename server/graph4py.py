@@ -15,7 +15,7 @@ from setproctitle import setproctitle
 __version__ = '0.1'
 
 
-class Printemps(object):
+class Graph4Py(object):
 
     def __init__(self, backend, path, authkey):
         self.authkey = authkey
@@ -24,28 +24,27 @@ class Printemps(object):
 
     def process(self, connection):
         while self.running:
-            while self.running:
+            result = dict()
+            try:
+                tree, kwargs = connection.recv()
+            except EOFError:
+                break
+            else:
+                kwargs['graph'] = self.graph
+                kwargs['result'] = result
+                locals().update(kwargs)
                 try:
-                    tree, kwargs = connection.recv()
-                except EOFError:
-                    break
-                else:
                     code = compile(tree, '<string>', 'exec')
-                    result = dict()
-                    kwargs['graph'] = self.graph
-                    kwargs['result'] = result
-                    locals().update(kwargs)
-                    try:
-                        exec code
-                    except Exception, e:
-                        message = '%s\n%s' % (e.message, kwargs)
-                        message = '%s\n%s' % (message, traceback.format_exc())
-                        connection.send({
-                            'type': 'exception',
-                            'data': message,
-                        })
-                    else:
-                        connection.send({'type': 'result', 'data': result})
+                    exec code
+                except Exception, e:
+                    message = '%s\n\n%s\n\n' % (e.message, kwargs)
+                    message = '%s%s' % (message, traceback.format_exc())
+                    connection.send({
+                        'type': 'exception',
+                        'data': message,
+                    })
+                else:
+                    connection.send({'type': 'result', 'data': result})
 
     def close(self):
         self.running = False
@@ -54,8 +53,8 @@ class Printemps(object):
 
 
 def main():
-    setproctitle('printemps')
-    parser = argparse.ArgumentParser(description='Run Printemps graph server')
+    setproctitle('graph4py')
+    parser = argparse.ArgumentParser(description='Run Graph4Py graph server')
     parser.add_argument(
         '--version',
         '-v',
@@ -69,11 +68,10 @@ def main():
     parser.add_argument('--authkey', '-k', action='store')
     args = parser.parse_args()
 
-    database = Printemps(args.backend, args.path, args.authkey)
+    database = Graph4Py(args.backend, args.path, args.authkey)
 
     def signal_handler(s, frame):
         database.close()
-        time.sleep(1)
         sys.exit(0)
     signal.signal(signal.SIGINT, signal_handler)
 
@@ -83,3 +81,7 @@ def main():
     while True:
         connection = listener.accept()
         database.process(connection)
+
+
+if __name__ == '__main__':
+    main()
