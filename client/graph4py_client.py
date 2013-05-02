@@ -11,13 +11,13 @@ class Graph4PyClient(object):
         self.address = (host, port)
         self.authkey = authkey
 
-    def process(self, query, **kwargs):
+    def process(self, query, *args, **kwargs):
         connection = Client(self.address, authkey=self.authkey)
         name = query.func_name
         kwargs['name'] = name
         tree = ast.parse(inspect.getsource(query))
         tree = _ast.Module(tree.body[0].body)
-        connection.send([tree, kwargs])
+        connection.send([tree, args, kwargs])
         result = connection.recv()
         connection.close()
         if result['type'] == 'result':
