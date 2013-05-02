@@ -4,6 +4,8 @@ import inspect
 
 from multiprocessing.connection import Client
 
+__version__ = '0.1'
+
 
 class Graph4PyClient(object):
 
