@@ -15,7 +15,7 @@ from setproctitle import setproctitle
 __version__ = '0.1'
 
 
-class ObjectGraph(Graph):
+class ObjectsGraph(Graph):
 
     def create_vertex_object(self, mro):
         vertex = self.create_vertex()
