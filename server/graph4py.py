@@ -64,12 +64,13 @@ class Graph4Py(object):
             except EOFError:
                 break
             else:
-                kwargs['graph'] = self.graph
-                kwargs['result'] = result
-                locals().update(kwargs)
+                local = dict()
+                local['graph'] = self.graph
+                local['result'] = result
+                local.update(kwargs)
                 try:
                     code = compile(tree, '<string>', 'exec')
-                    exec code
+                    exec code in local
                 except Exception, e:
                     message = '%s\n\n%s\n\n' % (e.message, kwargs)
                     message = '%s%s' % (message, traceback.format_exc())
