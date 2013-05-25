@@ -58,12 +58,12 @@ class Graph4Py(object):
 
     def process(self, connection):
         while self.running:
-            result = dict()
             try:
                 tree, kwargs = connection.recv()
             except EOFError:
                 break
             else:
+                result = dict()
                 local = dict()
                 local['graph'] = self.graph
                 local['result'] = result
