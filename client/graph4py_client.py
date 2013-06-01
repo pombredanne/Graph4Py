@@ -16,7 +16,7 @@ class Graph4PyClient(object):
     def process(self, query, **kwargs):
         connection = Client(self.address, authkey=self.authkey)
         name = query.func_name
-        kwargs['name'] = name
+        kwargs['__query_name__'] = name
         tree = ast.parse(inspect.getsource(query))
         tree = _ast.Module(tree.body[0].body)
         connection.send([tree, kwargs])
