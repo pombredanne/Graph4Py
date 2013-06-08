@@ -67,7 +67,7 @@ class Graph4Py(object):
                 local = dict()
                 local['graph'] = self.graph
                 local['result'] = result
-                local.update(kwargs)
+                local['values'] = kwargs
                 try:
                     code = compile(tree, '<string>', 'exec')
                     exec code in local
