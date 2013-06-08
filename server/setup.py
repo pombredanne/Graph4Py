@@ -17,12 +17,9 @@ def long_description():
 __doc__ = long_description()
 
 
-from graph4py import __version__
-
-
 setup(
     name='graph4py',
-    version=__version__,
+    version='0.1',
     url='https://github.com/python-graph-lovestory/Graph4Py',
     license='AGPL',
     author='Amirouche Boubekki',
