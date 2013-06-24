@@ -61,7 +61,7 @@ class Graph4Py(object):
             try:
                 tree, kwargs = connection.recv()
             except EOFError:
-                break
+                continue
             else:
                 result = dict()
                 local = dict()
