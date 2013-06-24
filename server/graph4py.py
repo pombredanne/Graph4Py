@@ -54,9 +54,9 @@ class Graph4Py(object):
     def __init__(self, backend, path, authkey):
         self.authkey = authkey
         self.graph = ObjectsGraph(backend, path)
-        self.running = True
 
     def process(self, connection):
+        self.running = True
         while self.running:
             try:
                 tree, kwargs = connection.recv()
