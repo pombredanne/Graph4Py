@@ -32,24 +32,24 @@ class Graph4Py(object):
         self.graph = graph_class(backend, path)
 
     def process(self, connection):
-        self.running = True
-        while self.running:
+        try:
+            method, args, kwargs = connection.recv()
+        except EOFError:
+            pass
+        else:
             try:
-                method, args, kwargs = connection.recv()
-            except EOFError:
-                continue
+                print 'exec'
+                result = getattr(self.graph, method)(*args, **kwargs)
+            except Exception, e:
+                message = '%s\n\n%s\n\n' % (e.message, kwargs)
+                message = '%s%s' % (message, traceback.format_exc())
+                connection.send({
+                    'type': 'exception',
+                    'data': message,
+                })
             else:
-                try:
-                    result = getattr(self, method)(*args, **kwargs)
-                except Exception, e:
-                    message = '%s\n\n%s\n\n' % (e.message, kwargs)
-                    message = '%s%s' % (message, traceback.format_exc())
-                    connection.send({
-                        'type': 'exception',
-                        'data': message,
-                    })
-                else:
-                    connection.send({'type': 'result', 'data': result})
+                print 'sending'
+                connection.send({'type': 'result', 'data': result})
 
     def close(self):
         print 'closing'
@@ -85,7 +85,7 @@ def main():
     signal.signal(signal.SIGINT, signal_handler)
 
     listener = Listener((args.host, args.port), family='AF_INET')
-    print 'Running on %s:%s' % (args.host, args.port)
+    print 'Running on %s:%s with %s' % (args.host, args.port, database.graph)
 
     while True:
         connection = listener.accept()
