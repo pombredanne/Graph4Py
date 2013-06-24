@@ -19,7 +19,7 @@ __doc__ = long_description()
 
 setup(
     name='graph4py',
-    version='0.1',
+    version='0.2',
     url='https://github.com/python-graph-lovestory/Graph4Py',
     license='AGPL',
     author='Amirouche Boubekki',
